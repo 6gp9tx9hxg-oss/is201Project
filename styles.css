@@ -1,0 +1,51 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: whitesmoke; 
+    color: #333;
+}
+
+.masthead {
+    background-image: url('https://images.pexels.com/photos/1331710/pexels-photo-1331710.jpeg');
+    background-size: cover;
+    background-position: center;
+    padding: 8rem 0;
+    text-align: center;
+    color: white;
+}
+
+.masthead h1 {
+    font-family: 'Lora', serif;
+    font-size: 4rem;
+    color: black;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+    font-weight: bold;
+}
+
+.masthead p {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    color: black;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+    font-weight: bold;
+}
+
+.section-title {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Lora', serif;
+}
+
+.content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    text-align: center;
+    font-style: italic;
+    color: #555;
+}

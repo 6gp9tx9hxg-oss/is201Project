@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ally Clements - Game</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700|Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Game specific styles */
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 2rem auto;
+            background-color: #ffe6f0;
+            border: 3px solid #ff69b4;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #basket {
+            position: absolute;
+            bottom: 10px;
+            width: 80px;
+            height: 40px;
+            background-color: #ff69b4;
+            border-radius: 10px;
+        }
+
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/833/833472.png');
+            background-size: cover;
+        }
+
+        #score {
+            text-align: center;
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            color: #ff1493;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            #game-container {
+                height: 300px;
+            }
+            #basket {
+                width: 60px;
+                height: 30px;
+            }
+            .heart {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Taylor Swift</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="resume.html">Personal Resume</a></li>
+                <li class="nav-item"><a class="nav-link" href="tableau.html">Tableau Graph</a></li>
+                <li class="nav-item"><a class="nav-link active" href="game.html">Game</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Header -->
+<header class="masthead" id="game-header">
+    <h1>Catch the Falling Hearts</h1>
+    <p class="lead">Move the basket and catch as many hearts as you can!</p>
+</header>
+
+<!-- Game Instructions -->
+<div class="container content my-4">
+    <div class="alert alert-info text-center" role="alert" style="font-family: 'Lora', serif; font-size: 1.2rem;">
+        <strong>How to Play:</strong> Use the <strong>left</strong> and <strong>right</strong> arrow keys to move the basket and catch the falling hearts. 
+        <br>Each heart you catch gives you 1 point. Try to catch as many as you can!
+    </div>
+</div>
+
+
+<!-- Game Container -->
+<div class="container content my-5">
+    <div id="score">Score: 0</div>
+    <div id="game-container">
+        <div id="basket"></div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    &copy; Ally Clements 2025
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Game Variables
+    const gameContainer = document.getElementById('game-container');
+    const basket = document.getElementById('basket');
+    const scoreDisplay = document.getElementById('score');
+    let basketX = gameContainer.offsetWidth / 2 - basket.offsetWidth / 2;
+    let score = 0;
+    const hearts = [];
+    let gameInterval;
+
+    // Position basket
+    basket.style.left = basketX + 'px';
+
+    // Handle arrow keys
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowLeft") {
+            basketX -= 20;
+        } else if (e.key === "ArrowRight") {
+            basketX += 20;
+        }
+        basketX = Math.max(0, Math.min(gameContainer.offsetWidth - basket.offsetWidth, basketX));
+        basket.style.left = basketX + 'px';
+    });
+
+    // Create falling hearts
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * (gameContainer.offsetWidth - 30) + 'px';
+        heart.style.top = '-30px';
+        gameContainer.appendChild(heart);
+        hearts.push(heart);
+    }
+
+    // Update hearts
+    function updateHearts() {
+        for (let i = hearts.length - 1; i >= 0; i--) {
+            const heart = hearts[i];
+            heart.style.top = (parseFloat(heart.style.top) + 3) + 'px';
+
+            // Check for collision
+            const heartRect = heart.getBoundingClientRect();
+            const basketRect = basket.getBoundingClientRect();
+            if (
+                heartRect.bottom >= basketRect.top &&
+                heartRect.left + heartRect.width/2 >= basketRect.left &&
+                heartRect.left + heartRect.width/2 <= basketRect.right
+            ) {
+                score++;
+                scoreDisplay.textContent = 'Score: ' + score;
+                heart.remove();
+                hearts.splice(i, 1);
+            } else if (parseFloat(heart.style.top) > gameContainer.offsetHeight) {
+                heart.remove();
+                hearts.splice(i, 1);
+            }
+        }
+    }
+
+    // Game loop
+    function gameLoop() {
+        if (Math.random() < 0.03) { // spawn hearts
+            createHeart();
+        }
+        updateHearts();
+    }
+
+    // Start game
+    gameInterval = setInterval(gameLoop, 20);
+</script>
+</body>
+</html>
